@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Serviço da aplicação PHP
+  app:
+    build: .
+    container_name: user_manager_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    # Removido depends_on pois usaremos banco externo
+    networks:
+      - user_manager_network
+
+  # Comentado - usando banco MySQL externo existente
+  # db:
+  #   image: mysql:8.0
+  #   container_name: user_manager_db
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: meu_banco
+  #     MYSQL_USER: usuario
+  #     MYSQL_PASSWORD: senha
+  #     MYSQL_ROOT_PASSWORD: root_password
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #     - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  #   networks:
+  #     - user_manager_network
+
+  # Comentado - usando banco MySQL externo existente
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: user_manager_phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PMA_HOST: db
+  #     PMA_USER: usuario
+  #     PMA_PASSWORD: senha
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - user_manager_network
+
+# Volumes para persistir dados do banco
+volumes:
+  db_data:
+
+# Rede para comunicação entre containers
+networks:
+  user_manager_network:
+    driver: bridge
